@@ -1,0 +1,5 @@
+dataset,source,license,access_date,status,notes
+NASA GPM IMERG,NASA Earthdata,,2026-10-07,configured,Earthdata token verified
+Copernicus DEM,Copernicus AWS,,2026-10-07,verified,Public S3 access verified
+ESA WorldCover,ESA WorldCover,,2026-10-07,verified,2021 v200 tile access verified
+OpenStreetMap,OpenStreetMap / Overpass,,2026-10-07,configured,Public endpoint; cache recommended
