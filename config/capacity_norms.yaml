@@ -1,0 +1,64 @@
+version: "phase6-placeholder-v1"
+notes: "Placeholder planning norms for MVP demonstration; replace with sourced district/state norms before operational use."
+temporary_shelter:
+  land_sqm_per_person:
+    value: 12.0
+    unit: "sqm/person"
+    source_citation: "PLACEHOLDER - cite Sphere/state temporary shelter planning norm before operational use"
+    is_placeholder: true
+  water_litres_per_person_day:
+    value: 15.0
+    unit: "litres/person/day"
+    source_citation: "PLACEHOLDER - commonly used emergency minimum; verify and cite before operational use"
+    is_placeholder: true
+  sanitation_persons_per_toilet:
+    value: 20.0
+    unit: "persons/toilet"
+    source_citation: "PLACEHOLDER - verify and cite Sphere/state sanitation norm before operational use"
+    is_placeholder: true
+  road_persons_per_m_width:
+    value: 120.0
+    unit: "persons/metre road width"
+    source_citation: "PLACEHOLDER - planning proxy; verify locally"
+    is_placeholder: true
+  service_person_capacity:
+    value: 300
+    unit: "persons"
+    source_citation: "PLACEHOLDER - nearest service-capacity proxy"
+    is_placeholder: true
+  usable_land_fraction:
+    value: 0.65
+    unit: "ratio"
+    source_citation: "PLACEHOLDER - allows circulation/common space"
+    is_placeholder: true
+permanent_site:
+  land_sqm_per_person:
+    value: 28.0
+    unit: "sqm/person"
+    source_citation: "PLACEHOLDER - replace with state housing/layout norm"
+    is_placeholder: true
+  water_litres_per_person_day:
+    value: 55.0
+    unit: "litres/person/day"
+    source_citation: "PLACEHOLDER - replace with state/rural water norm"
+    is_placeholder: true
+  sanitation_persons_per_toilet:
+    value: 6.0
+    unit: "persons/toilet"
+    source_citation: "PLACEHOLDER - household sanitation proxy"
+    is_placeholder: true
+  road_persons_per_m_width:
+    value: 80.0
+    unit: "persons/metre road width"
+    source_citation: "PLACEHOLDER - planning proxy; verify locally"
+    is_placeholder: true
+  service_person_capacity:
+    value: 500
+    unit: "persons"
+    source_citation: "PLACEHOLDER - nearest service-capacity proxy"
+    is_placeholder: true
+  usable_land_fraction:
+    value: 0.55
+    unit: "ratio"
+    source_citation: "PLACEHOLDER - allows roads/open space/community facilities"
+    is_placeholder: true

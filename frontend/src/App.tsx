@@ -1,122 +1,158 @@
-import { useState } from 'react'
-import heroImg from './assets/hero.png'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import './App.css'
+import React, { useEffect, useState, useCallback } from 'react';
+import { Navbar } from './components/Navbar';
+import { MapLibreMap } from './components/MapLibreMap';
+import { PriorityTable } from './components/PriorityTable';
+import { DetailDrawer } from './components/DetailDrawer';
+import { CapacityVisualizer } from './components/CapacityVisualizer';
+import { WhatIfPanel } from './components/WhatIfPanel';
+import { ExportBar } from './components/ExportBar';
+import { api } from './api/client';
+import type { GeoJSONFeatureCollection, Habitation, Site } from './types';
 
-function App() {
-  const [count, setCount] = useState(0)
+export const App: React.FC = () => {
+  const [district] = useState('wayanad');
+  const [activeTab, setActiveTab] = useState<'map' | 'priority' | 'capacity' | 'scenarios'>('map');
+  const [isLoading, setIsLoading] = useState(false);
+
+  // Domain State
+  const [cellsData, setCellsData] = useState<GeoJSONFeatureCollection | null>(null);
+  const [habitationsData, setHabitationsData] = useState<GeoJSONFeatureCollection<Habitation> | null>(null);
+  const [habitationsList, setHabitationsList] = useState<Habitation[]>([]);
+  const [sitesData, setSitesData] = useState<GeoJSONFeatureCollection<Site> | null>(null);
+  const [sitesList, setSitesList] = useState<Site[]>([]);
+  const [flowData, setFlowData] = useState<GeoJSONFeatureCollection | null>(null);
+
+  const [activeScenarioId, setActiveScenarioId] = useState<string>('scen_baseline_ilp');
+  const [activeScenarioName, setActiveScenarioName] = useState<string>('Baseline ILP Relocation Plan');
+
+  // Selected Entities for XAI inspection
+  const [selectedHabitation, setSelectedHabitation] = useState<Habitation | null>(null);
+  const [, setSelectedSite] = useState<Site | null>(null);
+
+  // Data Loading Routine
+  const loadDashboardData = useCallback(async (scenarioIdToLoad?: string) => {
+    setIsLoading(true);
+    try {
+      const currentScenId = scenarioIdToLoad || activeScenarioId;
+
+      // Parallel fetch
+      const [cells, habsGeo, habsTable, sitesGeo, flows] = await Promise.all([
+        api.getCells(district, undefined, 2500).catch(() => null),
+        api.getHabitationsGeoJSON(district).catch(() => null),
+        api.getPriorityTable(district).catch(() => []),
+        api.getSitesGeoJSON(district).catch(() => null),
+        api.getAssignmentFlows(currentScenId).catch(() => null),
+      ]);
+
+      if (cells) setCellsData(cells);
+      if (habsGeo) setHabitationsData(habsGeo);
+      if (habsTable) setHabitationsList(habsTable);
+      if (sitesGeo) {
+        setSitesData(sitesGeo);
+        setSitesList(sitesGeo.features.map((f) => f.properties));
+      }
+      if (flows) setFlowData(flows);
+    } catch (err) {
+      console.error('Failed to load dashboard data:', err);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [district, activeScenarioId]);
+
+  useEffect(() => {
+    loadDashboardData();
+  }, [loadDashboardData]);
+
+  // Handle Simulation Complete
+  const handleSimulationComplete = (newScenId: string, newScenName: string) => {
+    setActiveScenarioId(newScenId);
+    setActiveScenarioName(newScenName);
+    loadDashboardData(newScenId);
+  };
+
+  // Handle Re-Seed
+  const handleSeedData = async () => {
+    if (!confirm('Re-seed deterministic demo dataset for Wayanad?')) return;
+    setIsLoading(true);
+    try {
+      await api.seedDemoData(district);
+      await loadDashboardData();
+      alert('Demo data successfully re-seeded!');
+    } catch (err: any) {
+      alert(`Seed failed: ${err.message}`);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.tsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
+    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', background: 'var(--bg-primary)' }}>
+      {/* Top Navbar */}
+      <Navbar
+        district={district}
+        activeScenarioName={activeScenarioName}
+        isSimulating={isLoading}
+        onRefresh={() => loadDashboardData()}
+        onSeedData={handleSeedData}
+        activeTab={activeTab}
+        setActiveTab={setActiveTab}
+      />
 
-      <div className="ticks"></div>
+      {/* Main Content Area */}
+      <main style={{ flex: 1, display: 'flex', flexDirection: 'column', padding: '0 16px 16px', gap: '12px' }}>
+        {activeTab === 'map' && (
+          <div style={{ flex: 1, display: 'grid', gridTemplateColumns: '1fr 340px', gap: '14px', minHeight: '680px' }}>
+            {/* GIS Map */}
+            <div style={{ height: '100%', minHeight: '680px' }}>
+              <MapLibreMap
+                cellsGeoJSON={cellsData}
+                habitationsGeoJSON={habitationsData}
+                sitesGeoJSON={sitesData}
+                flowGeoJSON={flowData}
+                selectedHabitationId={selectedHabitation?.id || null}
+                onSelectHabitation={(hab) => setSelectedHabitation(hab)}
+                onSelectSite={(site) => setSelectedSite(site)}
+              />
+            </div>
 
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
+            {/* Sidebar with What-If Simulation & Quick Stats */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+              <WhatIfPanel
+                district={district}
+                onSimulationComplete={handleSimulationComplete}
+              />
+              <ExportBar activeScenarioId={activeScenarioId} />
+            </div>
+          </div>
+        )}
 
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
-  )
-}
+        {activeTab === 'priority' && (
+          <div style={{ flex: 1, minHeight: '680px' }}>
+            <PriorityTable
+              habitations={habitationsList}
+              selectedHabitationId={selectedHabitation?.id || null}
+              onSelectHabitation={(hab) => setSelectedHabitation(hab)}
+            />
+          </div>
+        )}
 
-export default App
+        {activeTab === 'capacity' && (
+          <div style={{ flex: 1, minHeight: '680px' }}>
+            <CapacityVisualizer
+              sites={sitesList}
+              onSelectSite={(site) => setSelectedSite(site)}
+            />
+          </div>
+        )}
+      </main>
+
+      {/* Slide-in Detail Drawer for Explainable AI */}
+      <DetailDrawer
+        habitation={selectedHabitation}
+        onClose={() => setSelectedHabitation(null)}
+      />
+    </div>
+  );
+};
+
+export default App;
