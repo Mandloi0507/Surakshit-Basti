@@ -1,0 +1,61 @@
+id: wayanad
+name: Wayanad
+state: Kerala
+bbox: [75.78, 11.45, 76.45, 12.00]
+projected_crs: "EPSG:32643"
+grid_resolution_m: 100
+hazards_active:
+  - landslide
+  - flood
+  - flash_flood
+
+weights:
+  landslide:
+    slope: 0.30
+    aspect: 0.10
+    curvature: 0.10
+    distance_to_drainage: 0.15
+    distance_to_roads: 0.15
+    land_cover: 0.10
+    historical_events: 0.10
+  flood:
+    hand: 0.35
+    distance_to_river: 0.25
+    flow_accumulation: 0.20
+    wetness_index: 0.10
+    land_cover: 0.10
+  vulnerability:
+    children_under_6: 0.166
+    elderly_60_plus: 0.166
+    disabled_persons: 0.167
+    female_headed_hh: 0.167
+    kutcha_houses: 0.167
+    distance_to_health: 0.167
+
+thresholds:
+  red_zone_min: 0.70
+  amber_zone_min: 0.40
+  immediate_urgency_min: 0.75
+  short_term_urgency_min: 0.45
+  rainfall_alert_trigger_mm_day: 100.0
+
+time_factors:
+  baseline: 1.0
+  active_alert: 1.5
+  recent_event: 1.25
+
+historical_events:
+  - id: "EV-2024-WYND-01"
+    name: "Meppadi Chooralmala Debris Flow"
+    date: "2024-07-30"
+    hazard_type: "landslide"
+    lat: 11.5342
+    lon: 76.1315
+    description: "Catastrophic rainfall-triggered debris flow and slope failure along Iruvazhinji river basin in Meppadi panchayat."
+  - id: "EV-2019-WYND-01"
+    name: "Puthumala Landslide"
+    date: "2019-08-08"
+    hazard_type: "landslide"
+    lat: 11.5208
+    lon: 76.1287
+    description: "Heavy monsoon-induced massive landslide wiping out plantation settlement."

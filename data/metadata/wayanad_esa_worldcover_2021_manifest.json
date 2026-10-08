@@ -1,0 +1,29 @@
+{
+  "dataset_id": "esa_worldcover_2021",
+  "district_id": "wayanad",
+  "source": "ESA / AWS S3 Open Data",
+  "dataset_name": "ESA WorldCover 2021 v200",
+  "version": "v200",
+  "license": "CC-BY 4.0",
+  "access_date": "2026-10-07",
+  "bbox": [
+    75.78,
+    11.45,
+    76.45,
+    12.0
+  ],
+  "crs": "EPSG:4326",
+  "resolution": "10m",
+  "file_paths": [
+    "data\\raw\\worldcover\\wayanad\\ESA_WorldCover_10m_2021_v200_N09E075_Map.tif",
+    "data\\raw\\worldcover\\wayanad\\ESA_WorldCover_10m_2021_v200_N12E075_Map.tif"
+  ],
+  "checksums": {
+    "data\\raw\\worldcover\\wayanad\\ESA_WorldCover_10m_2021_v200_N09E075_Map.tif": "dry_run_placeholder",
+    "data\\raw\\worldcover\\wayanad\\ESA_WorldCover_10m_2021_v200_N12E075_Map.tif": "dry_run_placeholder"
+  },
+  "processing_status": "raw_downloaded",
+  "script": "backend.app.ingestion.worldcover",
+  "data_origin": "CACHED",
+  "created_at": "2026-10-07T20:05:50.800087+00:00"
+}

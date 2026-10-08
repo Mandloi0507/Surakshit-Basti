@@ -1,0 +1,9 @@
+{
+  "district_id": "wayanad",
+  "observation_time": "2026-10-07T20:05:39.293860+00:00",
+  "valid_time": "2026-10-07T20:05:39.293860+00:00",
+  "mean_rainfall_24h_mm": 45.2,
+  "max_rainfall_24h_mm": 112.5,
+  "source": "NASA GPM IMERG Early Run NRT (Dry-Run / Cached)",
+  "data_origin": "CACHED"
+}

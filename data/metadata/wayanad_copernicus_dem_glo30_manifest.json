@@ -1,0 +1,33 @@
+{
+  "dataset_id": "copernicus_dem_glo30",
+  "district_id": "wayanad",
+  "source": "Copernicus / AWS S3 Open Data",
+  "dataset_name": "Copernicus DEM GLO-30",
+  "version": "2021",
+  "license": "Copernicus Open Access / CC-BY",
+  "access_date": "2026-10-07",
+  "bbox": [
+    75.78,
+    11.45,
+    76.45,
+    12.0
+  ],
+  "crs": "EPSG:4326",
+  "resolution": "30m",
+  "file_paths": [
+    "data\\raw\\copernicus_dem\\wayanad\\Copernicus_DSM_COG_10_N11_00_E075_00_DEM.tif",
+    "data\\raw\\copernicus_dem\\wayanad\\Copernicus_DSM_COG_10_N11_00_E076_00_DEM.tif",
+    "data\\raw\\copernicus_dem\\wayanad\\Copernicus_DSM_COG_10_N12_00_E075_00_DEM.tif",
+    "data\\raw\\copernicus_dem\\wayanad\\Copernicus_DSM_COG_10_N12_00_E076_00_DEM.tif"
+  ],
+  "checksums": {
+    "data\\raw\\copernicus_dem\\wayanad\\Copernicus_DSM_COG_10_N11_00_E075_00_DEM.tif": "dry_run_placeholder",
+    "data\\raw\\copernicus_dem\\wayanad\\Copernicus_DSM_COG_10_N11_00_E076_00_DEM.tif": "dry_run_placeholder",
+    "data\\raw\\copernicus_dem\\wayanad\\Copernicus_DSM_COG_10_N12_00_E075_00_DEM.tif": "dry_run_placeholder",
+    "data\\raw\\copernicus_dem\\wayanad\\Copernicus_DSM_COG_10_N12_00_E076_00_DEM.tif": "dry_run_placeholder"
+  },
+  "processing_status": "raw_downloaded",
+  "script": "backend.app.ingestion.copernicus_dem",
+  "data_origin": "CACHED",
+  "created_at": "2026-10-07T20:05:50.789204+00:00"
+}
